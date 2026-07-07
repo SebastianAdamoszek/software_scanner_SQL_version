@@ -10,7 +10,18 @@ PAGE_SIZE = 30
 # =========================
 # MENU
 # =========================
+
+from rich.panel import Panel
+
+console.print(
+    Panel(
+        "[grey62]Software Scanner CLI[/grey62]\nVersion 1.0",
+        title="Information"
+    )
+)
+
 def show_menu(search, publisher, missing):
+
 
     status = f"""
     Filtry aktywne:
