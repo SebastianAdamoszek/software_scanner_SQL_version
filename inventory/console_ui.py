@@ -371,7 +371,7 @@ def browse_programs(programs):
 
 
         elif choice == "q":
-
+            console.clear()
             break
 
 

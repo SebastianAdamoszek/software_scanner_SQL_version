@@ -99,11 +99,11 @@ def run_scan(args):
     # =========================
     # OUTPUT (RICH)
     # =========================
-    browse_programs(programs)
     show_summary(summary)
     show_top_publishers(summary)
     show_filters(summary["filters"])
     show_saved_files(saved_files)
+    browse_programs(programs)
     show_success()
 
 
@@ -130,6 +130,7 @@ def menu():
             run_scan(args)
 
             input("\n✔ Skan zakończony. Naciśnij ENTER aby wrócić do menu...")
+            consoole.clear()
 
         # =========================
         # SEARCH FILTER
