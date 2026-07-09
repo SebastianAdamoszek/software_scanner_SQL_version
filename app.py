@@ -15,6 +15,7 @@ from inventory.console_ui import (
     show_saved_files,
     show_filters,
     show_success,
+    show_version,
 )
 
 from inventory.filters import apply_filters, build_filter_info
@@ -198,9 +199,9 @@ def build_args(search, publisher, missing):
 # START
 # =========================
 if __name__ == "__main__":
+
     args = parse_args()
+
+    show_version()
+
     menu()
-    # if args.menu:
-    #     menu()
-    # else:
-    #     # run_scan(args)
