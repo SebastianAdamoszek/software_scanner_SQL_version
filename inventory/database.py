@@ -17,13 +17,15 @@ def create_tables():
 
     cursor.execute(
         """
-        CREATE TABLE IF NOT EXISTS programs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            version TEXT,
-            publisher TEXT,
-            install_location TEXT
-        )
+    CREATE TABLE IF NOT EXISTS programs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    version TEXT,
+    publisher TEXT,
+    install_date TEXT,
+    install_location TEXT,
+    uninstall_string TEXT
+    )  
         """
     )
 
@@ -31,7 +33,15 @@ def create_tables():
     connection.close()
 
 
-def add_program(name, version, publisher, install_location):
+def add_program(
+    name,
+    version,
+    publisher,
+    install_date,
+    install_location,
+    uninstall_string,
+):
+
     connection = create_connection()
 
     cursor = connection.cursor()
@@ -39,19 +49,33 @@ def add_program(name, version, publisher, install_location):
     cursor.execute(
         """
         INSERT INTO programs 
-        (name, version, publisher, install_location)
-        VALUES (?, ?, ?, ?)
+        (name, version, publisher, install_date, install_location, uninstall_string)
+        VALUES (?, ?, ?, ?, ?, ?)
         """,
         (
             name,
             version,
             publisher,
+            install_date,
             install_location,
+            uninstall_string,
         ),
     )
 
     connection.commit()
-    connection.close()    
+    connection.close() 
+
+
+def save_programs(programs):
+    for program in programs:
+        add_program(
+            program["name"],
+            program["version"],
+            program["publisher"],
+            program["install_date"],
+            program["install_location"],
+            program["uninstall_string"],
+        )
 
 
 def get_programs():
@@ -83,35 +107,27 @@ if __name__ == "__main__":
 
     print("Program added successfully")
 
-programs = [
-    {
-        "name": "Firefox",
-        "version": "140",
-        "publisher": "Mozilla",
-        "install_location": "C:\\Program Files\\Firefox"
-    },
-    {
-        "name": "VS Code",
-        "version": "1.102",
-        "publisher": "Microsoft",
-        "install_location": "C:\\Program Files\\Microsoft VS Code"
-    }
-]
+    programs = [
+        {
+            "name": "Firefox",
+            "version": "140",
+            "publisher": "Mozilla",
+            "install_location": "C:\\Program Files\\Firefox"
+        },
+        {
+            "name": "VS Code",
+            "version": "1.102",
+            "publisher": "Microsoft",
+            "install_location": "C:\\Program Files\\Microsoft VS Code"
+        }
+    ]
 
-for program in programs:
-    add_program(
-        program["name"],
-        program["version"],
-        program["publisher"],
-        program["install_location"],
-    )
+    save_programs(programs)
 
+    print("Programs added to database")
 
-print("Programs added to database")
+    saved_programs = get_programs()
 
-
-saved_programs = get_programs()
-
-for program in saved_programs:
-    print(program)    
+    for program in saved_programs:
+        print(program)    
    

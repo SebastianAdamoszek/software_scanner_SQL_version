@@ -24,7 +24,7 @@ from inventory.reports import save_reports
 from inventory.scanner import scan_installed_programs
 from inventory.summary import build_summary
 from inventory.system_info import get_system_info
-
+from inventory.database import save_programs, create_tables
 
 DEFAULT_OUTPUT_DIR = "reports"
 
@@ -53,6 +53,7 @@ def parse_args():
 # =========================
 def run_scan(args):
     setup_logging()
+    create_tables()
 
     show_header()
     show_scan_start()
@@ -66,24 +67,34 @@ def run_scan(args):
         show_no_programs_found()
         return
 
+
+    save_programs(programs)
+
+
     total_before = len(programs)
 
+
     filter_info = build_filter_info(
-        search=args.search,
-        publisher=args.publisher,
-        missing_version_only=args.missing_version_only,
-    )
+    search=args.search,
+    publisher=args.publisher,
+    missing_version_only=args.missing_version_only,
+)
+
 
     programs = apply_filters(
         programs,
         search=args.search,
         publisher=args.publisher,
         missing_version_only=args.missing_version_only,
-    )
+)
 
     if not programs:
         show_no_filter_results(total_before)
         return
+
+
+    save_programs(programs)
+
 
     output_dir = Path(args.output)
 
