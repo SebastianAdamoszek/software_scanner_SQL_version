@@ -53,8 +53,6 @@ def parse_args():
 # =========================
 def run_scan(args):
     setup_logging()
-    create_tables()
-
     show_header()
     show_scan_start()
 
@@ -67,7 +65,6 @@ def run_scan(args):
         show_no_programs_found()
         return
 
-    save_programs(programs)
 
     total_before = len(programs)
 
@@ -97,12 +94,18 @@ def run_scan(args):
         total_before_filters=total_before,
     )
 
-    saved_files = save_reports(
+    saved_files, report_dir = save_reports(
         programs,
         output_dir,
         args.format,
         summary,
     )
+
+    database_path = report_dir / "software_inventory.db"
+
+    create_tables(database_path)
+
+    save_programs(programs, database_path)
 
     # =========================
     # OUTPUT (RICH)

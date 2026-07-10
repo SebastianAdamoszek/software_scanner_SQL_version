@@ -1,31 +1,27 @@
 import sqlite3
-from pathlib import Path
 
 
-DATABASE_PATH = Path("software_scanner.db")
-
-
-def create_connection():
-    connection = sqlite3.connect(DATABASE_PATH)
+def create_connection(database_path):
+    connection = sqlite3.connect(database_path)
     return connection
 
 
-def create_tables():
-    connection = create_connection()
+def create_tables(database_path):
+    connection = create_connection(database_path)
 
     cursor = connection.cursor()
 
     cursor.execute(
         """
-    CREATE TABLE IF NOT EXISTS programs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    version TEXT,
-    publisher TEXT,
-    install_date TEXT,
-    install_location TEXT,
-    uninstall_string TEXT
-    )  
+        CREATE TABLE IF NOT EXISTS programs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            version TEXT,
+            publisher TEXT,
+            install_date TEXT,
+            install_location TEXT,
+            uninstall_string TEXT
+        )
         """
     )
 
@@ -34,6 +30,7 @@ def create_tables():
 
 
 def add_program(
+    database_path,
     name,
     version,
     publisher,
@@ -41,15 +38,21 @@ def add_program(
     install_location,
     uninstall_string,
 ):
-
-    connection = create_connection()
+    connection = create_connection(database_path)
 
     cursor = connection.cursor()
 
     cursor.execute(
         """
-        INSERT INTO programs 
-        (name, version, publisher, install_date, install_location, uninstall_string)
+        INSERT INTO programs
+        (
+            name,
+            version,
+            publisher,
+            install_date,
+            install_location,
+            uninstall_string
+        )
         VALUES (?, ?, ?, ?, ?, ?)
         """,
         (
@@ -63,12 +66,13 @@ def add_program(
     )
 
     connection.commit()
-    connection.close() 
+    connection.close()
 
 
-def save_programs(programs):
+def save_programs(programs, database_path):
     for program in programs:
         add_program(
+            database_path,
             program["name"],
             program["version"],
             program["publisher"],
@@ -78,8 +82,8 @@ def save_programs(programs):
         )
 
 
-def get_programs():
-    connection = create_connection()
+def get_programs(database_path):
+    connection = create_connection(database_path)
 
     cursor = connection.cursor()
 
@@ -94,40 +98,3 @@ def get_programs():
     connection.close()
 
     return programs
-
-if __name__ == "__main__":
-    create_tables()
-
-    add_program(
-        "Python",
-        "3.12",
-        "Python Software Foundation",
-        "C:\\Python312",
-    )
-
-    print("Program added successfully")
-
-    programs = [
-        {
-            "name": "Firefox",
-            "version": "140",
-            "publisher": "Mozilla",
-            "install_location": "C:\\Program Files\\Firefox"
-        },
-        {
-            "name": "VS Code",
-            "version": "1.102",
-            "publisher": "Microsoft",
-            "install_location": "C:\\Program Files\\Microsoft VS Code"
-        }
-    ]
-
-    save_programs(programs)
-
-    print("Programs added to database")
-
-    saved_programs = get_programs()
-
-    for program in saved_programs:
-        print(program)    
-   
