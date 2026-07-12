@@ -29,8 +29,8 @@ def show_version():
     table.add_column("Wersja")
 
     table.add_row(
-        "Software Scanner CLI",
-        "1.0"
+        "Software Scanner CLI + SQLite",
+        "1.1"
     )
 
     console.print(table)
