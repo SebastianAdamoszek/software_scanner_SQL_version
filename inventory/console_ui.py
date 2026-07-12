@@ -507,6 +507,7 @@ def show_top_publishers(summary, limit=30):
 # =========================
 
 def show_saved_files(files):
+    files = sorted(files, key=lambda file: file.name)
 
     table = Table(
         title="Zapisane raporty",

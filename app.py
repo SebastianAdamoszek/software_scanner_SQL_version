@@ -102,9 +102,12 @@ def run_scan(args):
     )
 
     database_path = report_dir / f"{base_name}.db"
+    
     create_tables(database_path)
 
     save_programs(programs, database_path)
+
+    saved_files.append(database_path)
 
     # =========================
     # OUTPUT (RICH)
