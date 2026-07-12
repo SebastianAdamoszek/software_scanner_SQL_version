@@ -94,15 +94,14 @@ def run_scan(args):
         total_before_filters=total_before,
     )
 
-    saved_files, report_dir = save_reports(
+    saved_files, report_dir, base_name = save_reports(
         programs,
         output_dir,
         args.format,
         summary,
     )
 
-    database_path = report_dir / "software_inventory.db"
-
+    database_path = report_dir / f"{base_name}.db"
     create_tables(database_path)
 
     save_programs(programs, database_path)

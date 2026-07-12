@@ -31,7 +31,7 @@ def save_reports(programs, output_dir, report_format, summary):
         elif current_format == "json":
             saved_files.append(save_json(programs, run_dir / f"{base_name}.json", summary))
 
-    return saved_files, run_dir
+    return saved_files, run_dir, base_name
 
 
 def save_txt(programs, file_path, summary):
